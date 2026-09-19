@@ -13,14 +13,39 @@ const AddJobPage = () => {
 
   const navigate = useNavigate();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    console.log("AddJobPage");
+
+    const newJob = {
+      title,
+      type,
+      description,
+      company: {
+        name: companyName,
+        contactEmail,
+        contactPhone,
+      },
+      location,
+      salary,
+    };
+
+    const response = await fetch("/api/jobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newJob),
+    });
+
+    if (response.ok) {
+      navigate("/");
+    }
   };
 
   return (
     <div className="create">
       <h2>Add a New Job</h2>
+
       <form onSubmit={submitForm}>
         <label htmlFor="title">Job title:</label>
         <input
@@ -29,6 +54,7 @@ const AddJobPage = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <label htmlFor="type">Job type:</label>
         <select
           id="type"
@@ -42,12 +68,14 @@ const AddJobPage = () => {
           <option value="Part-Time">Part-Time</option>
           <option value="Internship">Internship</option>
         </select>
+
         <label htmlFor="description">Job Description:</label>
         <textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
+
         <label htmlFor="companyName">Company Name:</label>
         <input
           id="companyName"
@@ -55,6 +83,7 @@ const AddJobPage = () => {
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
         />
+
         <label htmlFor="contactEmail">Contact Email:</label>
         <input
           id="contactEmail"
@@ -62,6 +91,7 @@ const AddJobPage = () => {
           value={contactEmail}
           onChange={(e) => setContactEmail(e.target.value)}
         />
+
         <label htmlFor="contactPhone">Contact Phone:</label>
         <input
           id="contactPhone"
@@ -69,6 +99,7 @@ const AddJobPage = () => {
           value={contactPhone}
           onChange={(e) => setContactPhone(e.target.value)}
         />
+
         <label htmlFor="location">Location:</label>
         <input
           id="location"
@@ -76,6 +107,7 @@ const AddJobPage = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+
         <label htmlFor="salary">Salary:</label>
         <input
           id="salary"
@@ -83,6 +115,7 @@ const AddJobPage = () => {
           value={salary}
           onChange={(e) => setSalary(e.target.value)}
         />
+
         <button type="submit">Add Job</button>
       </form>
     </div>
@@ -90,4 +123,3 @@ const AddJobPage = () => {
 };
 
 export default AddJobPage;
-
