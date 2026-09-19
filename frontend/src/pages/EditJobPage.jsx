@@ -27,14 +27,14 @@ const EditJobPage = () => {
           throw new Error("Failed to fetch job");
         }
         const data = await res.json();
-        setTitle(data.title);
-        setType(data.type);
-        setDescription(data.description);
-        setCompanyName(data.company.name);
-        setContactEmail(data.company.contactEmail);
-        setContactPhone(data.company.contactPhone);
-        setLocation(data.location);
-        setSalary(data.salary);
+        setTitle(data.title || "");
+        setType(data.type || "");
+        setDescription(data.description || "");
+        setCompanyName(data.company?.name || "");
+        setContactEmail(data.company?.contactEmail || "");
+        setContactPhone(data.company?.contactPhone || "");
+        setLocation(data.location || "");
+        setSalary(data.salary || "");
       } catch (error) {
         console.log("Error fetching data", error);
       }
@@ -42,13 +42,42 @@ const EditJobPage = () => {
     fetchJob();
   }, [id]);
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    console.log("EditJobPage");
+    const updatedJob = {
+      title,
+      type,
+      description,
+      location,
+      salary,
+      company: {
+        name: companyName,
+        contactEmail,
+        contactPhone,
+      },
+    };
+
+    try {
+      const res = await fetch(`/api/jobs/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedJob),
+      });
+
+      if (res.ok) {
+        navigate(`/jobs/${id}`);
+      } else {
+        console.error("Failed to update job");
+      }
+    } catch (error) {
+      console.error("Error updating job:", error);
+    }
   };
 
   const cancelEdit = () => {
-    console.log("cancelEdit");
+    navigate(`/jobs/${id}`);
   };
 
   return (
@@ -102,4 +131,3 @@ const EditJobPage = () => {
 };
 
 export default EditJobPage;
-
