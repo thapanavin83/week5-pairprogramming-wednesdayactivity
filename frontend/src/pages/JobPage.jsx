@@ -26,9 +26,12 @@ const JobPage = () => {
         method: "DELETE",
       });
 
-      if (res.ok) {
-        navigate("/");
+      if (!res.ok) {
+        console.error("Failed to delete job");
+        return;
       }
+
+      navigate("/");
     } catch (error) {
       console.error("Error deleting job:", error);
     }
