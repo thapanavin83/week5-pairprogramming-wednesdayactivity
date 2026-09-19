@@ -21,7 +21,17 @@ const JobPage = () => {
   }, [id]);
 
   const deleteJob = async () => {
-    console.log(JobPage);
+    try {
+      const res = await fetch(`/api/jobs/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
   };
 
   if (!job) {
@@ -39,9 +49,11 @@ const JobPage = () => {
       <p>Location: {job.location}</p>
       <p>Salary: {job.salary}</p>
       <p>Posted Date: {job.postedDate}</p>
+
       <Link to={`/edit-job/${id}`}>
         <button>Edit Job</button>
       </Link>
+
       <button onClick={deleteJob}>Delete Job</button>
     </div>
   );
